@@ -76,6 +76,6 @@ public class Creative {
     private Date createTime;
 
     @Basic
-    @Column(name = "updateTime", nullable = false)
+    @Column(name = "update_time", nullable = false)
     private Date updateTime;
 }

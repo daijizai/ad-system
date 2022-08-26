@@ -37,7 +37,6 @@ public class AccessLogFilter extends ZuulFilter {
 
     @Override
     public Object run() throws ZuulException {
-
         RequestContext context = RequestContext.getCurrentContext();
         Long startTime = (Long) context.get("startTime");
         long duration = System.currentTimeMillis() - startTime;
@@ -46,7 +45,6 @@ public class AccessLogFilter extends ZuulFilter {
         String uri = request.getRequestURI();
 
         log.info("uri: " + uri + ", duration: " + duration / 100 + "ms");
-
         return null;
     }
 }

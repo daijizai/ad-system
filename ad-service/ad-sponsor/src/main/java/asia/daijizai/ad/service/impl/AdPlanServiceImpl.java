@@ -9,9 +9,9 @@ import asia.daijizai.ad.entity.AdUser;
 import asia.daijizai.ad.exception.AdException;
 import asia.daijizai.ad.service.IAdPlanService;
 import asia.daijizai.ad.util.CommonUtil;
-import asia.daijizai.ad.vo.AdPlanGetRequest;
-import asia.daijizai.ad.vo.AdPlanRequest;
-import asia.daijizai.ad.vo.AdPlanResponse;
+import asia.daijizai.ad.vo.plan.AdPlanGetRequest;
+import asia.daijizai.ad.vo.plan.AdPlanRequest;
+import asia.daijizai.ad.vo.plan.AdPlanResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -55,7 +55,7 @@ public class AdPlanServiceImpl implements IAdPlanService {
         }
 
         //确保plan不存在
-        AdPlan oldPlan = planRepository.findByUserIdAndPlanName(request.getUserId(), request.getPlanName());
+        AdPlan oldPlan = planRepository.getByUserIdAndPlanName(request.getUserId(), request.getPlanName());
         if (oldPlan != null) {
             throw new AdException(Constants.ErrorMsg.SAME_NAME_PLAN_ERROR);
         }
@@ -80,6 +80,20 @@ public class AdPlanServiceImpl implements IAdPlanService {
         return planRepository.findAllByIdInAndUserId(
                 request.getIds(), request.getUserId()
         );
+    }
+
+    @Override
+    public List<AdPlan> getAdPlanByUserId(Long userId) throws AdException {
+        if (null == userId) {
+            throw new AdException(Constants.ErrorMsg.REQUEST_PARAM_ERROR);
+        }
+
+        return planRepository.findAllByUserId(userId);
+    }
+
+    @Override
+    public AdPlan getAdPlanById(Long id) throws AdException {
+        return planRepository.getById(id);
     }
 
     @Override

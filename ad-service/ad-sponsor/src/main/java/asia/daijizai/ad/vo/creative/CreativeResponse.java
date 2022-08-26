@@ -1,4 +1,4 @@
-package asia.daijizai.ad.vo;
+package asia.daijizai.ad.vo.creative;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

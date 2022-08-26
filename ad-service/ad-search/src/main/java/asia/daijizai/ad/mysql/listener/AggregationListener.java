@@ -82,6 +82,7 @@ public class AggregationListener implements BinaryLogClient.EventListener {
 
         //尝试处理binlog
         try {
+            log.info(">>>>>{}",event.getData().toString());
             BinlogRowData rowData = buildRowData(event.getData());
             if (rowData == null) {
                 return;
@@ -89,6 +90,7 @@ public class AggregationListener implements BinaryLogClient.EventListener {
             rowData.setEventType(type);
 
             //将rowData给感兴趣的处理器处理，即实现增量数据的更新
+            log.info(">>>>>{}",rowData);
             listener.onEvent(rowData);
 
         } catch (Exception ex) {
@@ -109,6 +111,7 @@ public class AggregationListener implements BinaryLogClient.EventListener {
             log.warn("table {} not found", tableName);
             return null;
         }
+        log.info(">>>>>{}",jsonTableInfo);
 
         List<Map<String, String>> afterMapList = new ArrayList<>();
 

@@ -55,6 +55,7 @@ public class SearchRequest {
         private DistrictFeature districtFeature;
         private ItFeature itFeature;
 
-        private FeatureRelation relation = FeatureRelation.AND;
+//        private FeatureRelation relation = FeatureRelation.AND;
+        private FeatureRelation relation;
     }
 }

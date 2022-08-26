@@ -1,7 +1,7 @@
 package asia.daijizai.ad.sender.index;
 
 import asia.daijizai.ad.dump.table.*;
-import asia.daijizai.ad.handler.AdLevelDataHandler;
+import asia.daijizai.ad.handler.AdDataHandler;
 import asia.daijizai.ad.index.DataLevel;
 import asia.daijizai.ad.mysql.constant.Constant;
 import asia.daijizai.ad.mysql.dto.MySqlRowData;
@@ -25,6 +25,7 @@ import java.util.Map;
 @Slf4j
 @Component("indexSender")
 public class IndexSender implements ISender {
+
     @Override
     public void sender(MySqlRowData rowData) {
         String level = rowData.getLevel();
@@ -70,7 +71,8 @@ public class IndexSender implements ISender {
                 planTables.add(planTable);
             }
 
-            planTables.forEach(p -> AdLevelDataHandler.handleLevel2(p, rowData.getOpType()));
+            log.info(">>>>>{}",planTables);
+            planTables.forEach(p -> AdDataHandler.handle(p, rowData.getOpType()));
 
         }
 
@@ -86,6 +88,9 @@ public class IndexSender implements ISender {
                     switch (k) {
                         case Constant.AD_CREATIVE_TABLE_INFO.COLUMN_ID:
                             creativeTable.setAdId(Long.valueOf(v));
+                            break;
+                        case Constant.AD_CREATIVE_TABLE_INFO.COLUMN_NAME:
+                            creativeTable.setName(v);
                             break;
                         case Constant.AD_CREATIVE_TABLE_INFO.COLUMN_TYPE:
                             creativeTable.setType(Integer.valueOf(v));
@@ -111,7 +116,7 @@ public class IndexSender implements ISender {
                 creativeTables.add(creativeTable);
             }
 
-            creativeTables.forEach(c -> AdLevelDataHandler.handleLevel2(c, rowData.getOpType()));
+            creativeTables.forEach(c -> AdDataHandler.handle(c, rowData.getOpType()));
         }
     }
 
@@ -146,7 +151,7 @@ public class IndexSender implements ISender {
             }
 
             unitTables.forEach(u ->
-                    AdLevelDataHandler.handleLevel3(u, rowData.getOpType()));
+                    AdDataHandler.handle(u, rowData.getOpType()));
         }
 
         if (rowData.getTableName().equals(Constant.AD_CREATIVE_UNIT_TABLE_INFO.TABLE_NAME)) {
@@ -170,7 +175,7 @@ public class IndexSender implements ISender {
                 creativeUnitTables.add(creativeUnitTable);
             }
 
-            creativeUnitTables.forEach(u -> AdLevelDataHandler.handleLevel3(u, rowData.getOpType()));
+            creativeUnitTables.forEach(u -> AdDataHandler.handle(u, rowData.getOpType()));
         }
     }
 
@@ -202,7 +207,7 @@ public class IndexSender implements ISender {
                     districtTables.add(districtTable);
                 }
 
-                districtTables.forEach(d -> AdLevelDataHandler.handleLevel4(d, rowData.getOpType()));
+                districtTables.forEach(d -> AdDataHandler.handle(d, rowData.getOpType()));
                 break;
             case Constant.AD_UNIT_IT_TABLE_INFO.TABLE_NAME:
                 List<AdUnitItTable> itTables = new ArrayList<>();
@@ -223,7 +228,7 @@ public class IndexSender implements ISender {
                     });
                     itTables.add(itTable);
                 }
-                itTables.forEach(i -> AdLevelDataHandler.handleLevel4(i, rowData.getOpType()));
+                itTables.forEach(i -> AdDataHandler.handle(i, rowData.getOpType()));
                 break;
             case Constant.AD_UNIT_KEYWORD_TABLE_INFO.TABLE_NAME:
 
@@ -245,7 +250,7 @@ public class IndexSender implements ISender {
                     keywordTables.add(keywordTable);
                 }
 
-                keywordTables.forEach(k -> AdLevelDataHandler.handleLevel4(k, rowData.getOpType()));
+                keywordTables.forEach(k -> AdDataHandler.handle(k, rowData.getOpType()));
                 break;
         }
     }

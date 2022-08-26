@@ -64,32 +64,51 @@ public class SearchImpl implements ISearch {
         Map<String, List<SearchResponse.Creative>> adSlot2Ads = response.getAdSlot2Ads();
 
         for (AdSlot adSlot : adSlots) {
-            Set<Long> targetUnitIdSet;
 
             //根据流量类型 获取（预筛选） 初始AdUnit
             Set<Long> adUnitIdSet = DataTable.of(AdUnitIndex.class).match(adSlot.getPositionType());//预过滤
+            log.info("根据流量类型预筛选unit>>>>>{}>>>>>{}", adSlot.getAdSlotCode(), adUnitIdSet);
+
+
+            Set<Long> targetUnitIdSet;//过滤后的unitId
 
             //再筛选
             if (relation == FeatureRelation.AND) {
                 filterKeywordFeature(adUnitIdSet, keywordFeature);
+
+                log.info("isNotEmpty>>>>>{}", CollectionUtils.isNotEmpty(keywordFeature.getKeywords()));
+                log.info("keywordFeature>>>>>{}", keywordFeature.getKeywords());
+                log.info("filterKeywordFeature>>>>>{}>>>>>{}", adSlot.getAdSlotCode(), adUnitIdSet);
                 filterDistrictFeature(adUnitIdSet, districtFeature);
+                log.info("districtFeature>>>>>{}", districtFeature.getDistricts());
+                log.info("filterDistrictFeature>>>>>{}>>>>>{}", adSlot.getAdSlotCode(), adUnitIdSet);
                 filterItTagFeature(adUnitIdSet, itFeature);
+                log.info("itFeature>>>>>{}", itFeature.getIts());
+                log.info("filterItTagFeature>>>>>{}>>>>>{}", adSlot.getAdSlotCode(), adUnitIdSet);
 
                 targetUnitIdSet = adUnitIdSet;
             } else {
-                targetUnitIdSet = getORRelationUnitIds(adUnitIdSet,
-                        keywordFeature, districtFeature, itFeature);
+                //FeatureRelation.OR：分别过滤再取并集
+                targetUnitIdSet = getORRelationUnitIds(adUnitIdSet, keywordFeature, districtFeature, itFeature);
             }
 
+            log.info(">>>>>{}>>>>>{}", adSlot.getAdSlotCode(), targetUnitIdSet);
+
+
+            //拿到unit对象
             List<AdUnitObject> unitObjects = DataTable.of(AdUnitIndex.class).fetch(targetUnitIdSet);
 
+
+            //如果unit或者unit所属plan状态不是“有效状态”，需要过滤掉
             filterAdUnitAndPlanStatus(unitObjects, CommonStatus.VALID);
 
+            //拿到unit的adId
             List<Long> adIds = DataTable.of(CreativeUnitIndex.class).selectAds(unitObjects);
 
+            //根据adId拿到广告对象
             List<CreativeObject> creativeObjects = DataTable.of(CreativeIndex.class).fetch(adIds);
 
-            //通过AdSlot实现对CreativeObject的过滤
+            //通过AdSlot实现对CreativeObject的过滤【长、宽、类型（图片、视频、文字）】
             filterCreativeByAdSlot(creativeObjects,
                     adSlot.getWidth(), adSlot.getHeight(), adSlot.getType());
 
@@ -150,6 +169,8 @@ public class SearchImpl implements ISearch {
 
         if (CollectionUtils.isNotEmpty(keywordFeature.getKeywords())) {
 
+            log.info("filterKeywordFeature>>>>>CollectionUtils.filter()");
+
             CollectionUtils.filter(adUnitIds, new Predicate<Long>() {
                 @Override
                 public boolean evaluate(Long adUnitId) {
@@ -205,7 +226,7 @@ public class SearchImpl implements ISearch {
     }
 
     private void filterCreativeByAdSlot(List<CreativeObject> creatives,
-                                        Integer width, Integer height, List<Integer> type) {
+                                        Integer width, Integer height, Integer type) {
 
         if (CollectionUtils.isEmpty(creatives)) {
             return;
@@ -216,9 +237,8 @@ public class SearchImpl implements ISearch {
                 creative -> creative.getAuditStatus().equals(CommonStatus.VALID.getStatus())
                         && creative.getWidth().equals(width)
                         && creative.getHeight().equals(height)
-                        && type.contains(creative.getType())
+                        && creative.getType().equals(type)
         );
     }
-
 
 }

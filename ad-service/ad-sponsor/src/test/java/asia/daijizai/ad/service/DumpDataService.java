@@ -108,9 +108,7 @@ public class DumpDataService {
 
     private void dumpAdUnitTable(String fileName) {
 
-        List<AdUnit> adUnits = unitRepository.findAllByUnitStatus(
-                CommonStatus.VALID.getStatus()
-        );
+        List<AdUnit> adUnits = unitRepository.findAllByUnitStatus(CommonStatus.VALID.getStatus());
         if (CollectionUtils.isEmpty(adUnits)) {
             return;
         }

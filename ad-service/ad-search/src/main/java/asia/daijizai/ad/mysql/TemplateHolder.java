@@ -31,21 +31,21 @@ public class TemplateHolder {
     private final String SQL_SCHEMA = "select table_schema, table_name, column_name, ordinal_position " +
             "from information_schema.columns " +
             "where table_schema = ? and table_name = ?";
-    private final JdbcTemplate jdbcTemplate;
-    private JsonTemplateInfo jsonTemplateInfo;
 
     @Autowired
-    public TemplateHolder(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-    }
+    private JdbcTemplate jdbcTemplate;
+
+    private JsonTemplateInfo jsonTemplateInfo;
 
     @PostConstruct
     private void init() {
+        log.info("TemplateHolder Init");
         loadJson("template.json");
     }
 
     /**
      * 通过表的名字，拿到表的所有信息
+     *
      * @param tableName
      * @return
      */
@@ -61,8 +61,19 @@ public class TemplateHolder {
 
         try {
             JsonTemplate jsonTemplate = JSON.parseObject(inStream, Charset.defaultCharset(), JsonTemplate.class);//反序列化
+            /*
+            序列化应该注意对应关系
+            template.json文件中表示数据库名字字段为 database
+            类JsonTemplate中表示数据库名字字段为 DBName
+             */
+            log.info(">>>>>{}",jsonTemplate);
+
             this.jsonTemplateInfo = JsonTemplateInfo.parse(jsonTemplate);// JsonTemplate -> JsonTemplateInfo
+            log.info(">>>>>{}",this.jsonTemplateInfo);
+
             loadMeta();//填充posMap字段。JsonTemplateInfo -> JsonTableInfo -> posMap
+
+            log.info(">>>>>{}",this.jsonTemplateInfo);
         } catch (IOException ex) {
             log.error(ex.getMessage());
             throw new RuntimeException("fail to parse json file");
@@ -78,7 +89,7 @@ public class TemplateHolder {
             List<String> insertFields = jsonTableInfo.getOpTypeFieldSetMap().get(OpType.ADD);
             List<String> deleteFields = jsonTableInfo.getOpTypeFieldSetMap().get(OpType.DELETE);
 
-            Object[] paramValues = new Object[]{jsonTemplateInfo.getDBName(), jsonTableInfo.getTableName()};
+            Object[] paramValues = new Object[]{this.jsonTemplateInfo.getDBName(), jsonTableInfo.getTableName()};
             jdbcTemplate.query(
                     SQL_SCHEMA,
                     paramValues,

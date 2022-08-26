@@ -1,5 +1,5 @@
 {
-  "database": "ad_system",
+  "DBName": "ad_system",
   "tableList": [
     {
       "tableName": "ad_plan",
@@ -46,6 +46,7 @@
       "level": 2,
       "insert": [
         {"column": "id"},
+        {"column": "name"},
         {"column": "type"},
         {"column": "material_type"},
         {"column": "height"},
@@ -55,6 +56,7 @@
       ],
       "update": [
         {"column": "id"},
+        {"column": "name"},
         {"column": "type"},
         {"column": "material_type"},
         {"column": "height"},

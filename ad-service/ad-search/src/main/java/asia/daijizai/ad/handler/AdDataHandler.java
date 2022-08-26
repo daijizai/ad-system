@@ -33,11 +33,9 @@ import java.util.Set;
  */
 
 @Slf4j
-public class AdLevelDataHandler {
+public class AdDataHandler {
 
-    //第二层级索引服务的加载--推广计划
-    //为什么第二层级？不与其他的索引服务有依赖关系
-    public static void handleLevel2(AdPlanTable planTable, OpType type) {
+    public static void handle(AdPlanTable planTable, OpType type) {
 
         //把从文件中获取到的格式转换成构建索引需要的格式（AdPlanTable -> AdPlanObject）
         AdPlanObject planObject = new AdPlanObject(
@@ -48,6 +46,7 @@ public class AdLevelDataHandler {
                 planTable.getEndDate()
         );
 
+        log.info(">>>>>{}",planObject);
         handleBinlogEvent(
                 DataTable.of(AdPlanIndex.class),
                 planObject.getPlanId(),
@@ -56,8 +55,7 @@ public class AdLevelDataHandler {
         );
     }
 
-    //第二层级索引服务的加载--创意
-    public static void handleLevel2(AdCreativeTable creativeTable, OpType type) {
+    public static void handle(AdCreativeTable creativeTable, OpType type) {
         CreativeObject creativeObject = new CreativeObject(
                 creativeTable.getAdId(),
                 creativeTable.getName(),
@@ -76,8 +74,7 @@ public class AdLevelDataHandler {
         );
     }
 
-    //第三层索引服务的加载--推广单元
-    public static void handleLevel3(AdUnitTable unitTable, OpType type){
+    public static void handle(AdUnitTable unitTable, OpType type){
 
         //索引之间有层级依赖关系，unit依赖plan
         AdPlanObject adPlanObject=DataTable.of(AdPlanIndex.class).get(unitTable.getPlanId());
@@ -102,8 +99,7 @@ public class AdLevelDataHandler {
         );
     }
 
-    //第三层索引服务的加载--创意与单元的关联关系
-    public static void handleLevel3(AdCreativeUnitTable creativeUnitTable, OpType type) {
+    public static void handle(AdCreativeUnitTable creativeUnitTable, OpType type) {
 
         if (type == OpType.UPDATE) {
             log.error("CreativeUnitIndex not support update");
@@ -135,7 +131,7 @@ public class AdLevelDataHandler {
         );
     }
 
-    public static void handleLevel4(AdUnitDistrictTable unitDistrictTable, OpType type) {
+    public static void handle(AdUnitDistrictTable unitDistrictTable, OpType type) {
 
         if (type == OpType.UPDATE) {
             log.error("district index can not support update");
@@ -155,7 +151,7 @@ public class AdLevelDataHandler {
         handleBinlogEvent(DataTable.of(UnitDistrictIndex.class), key, value, type);
     }
 
-    public static void handleLevel4(AdUnitItTable unitItTable, OpType type) {
+    public static void handle(AdUnitItTable unitItTable, OpType type) {
 
         if (type == OpType.UPDATE) {
             log.error("it index can not support update");
@@ -173,7 +169,7 @@ public class AdLevelDataHandler {
         handleBinlogEvent(DataTable.of(UnitItIndex.class), unitItTable.getItTag(), value, type);
     }
 
-    public static void handleLevel4(AdUnitKeywordTable keywordTable, OpType type) {
+    public static void handle(AdUnitKeywordTable keywordTable, OpType type) {
 
         if (type == OpType.UPDATE) {
             log.error("keyword index can not support update");

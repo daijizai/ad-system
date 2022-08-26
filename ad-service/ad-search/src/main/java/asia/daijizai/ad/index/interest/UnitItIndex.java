@@ -75,15 +75,19 @@ public class UnitItIndex implements IndexAware<String, Set<Long>> {
         log.info("UnitItIndex, after delete: {}", unitItMap);
     }
 
+
+    //
     public boolean match(Long unitId, List<String> itTags) {
 
         if (unitItMap.containsKey(unitId) && CollectionUtils.isNotEmpty(unitItMap.get(unitId))) {
+            //unitId确实有itFeature
 
-            Set<String> unitKeywords = unitItMap.get(unitId);
+            Set<String> its = unitItMap.get(unitId);//获取unitId的所有的itFeature
 
-            return CollectionUtils.isSubCollection(itTags, unitKeywords);
+            return CollectionUtils.isSubCollection(itTags, its);//给的 是 获取的 的子集
         }
 
+        //如果unitId本来就没有itFeature，直接返回false
         return false;
     }
 }

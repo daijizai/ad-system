@@ -1,4 +1,4 @@
-package asia.daijizai.ad.index.adunit;
+package asia.daijizai.ad.constant;
 
 /**
  * @author daijizai

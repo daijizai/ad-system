@@ -52,15 +52,18 @@ public class CreativeUnitIndex implements IndexAware<String, CreativeUnitObject>
 //        }
 //        unitSet.add(value.getUnitId());
 
-        CommonUtil.getOrCreate(value.getAdId(),creativeUnitMap,ConcurrentSkipListSet::new)
+        CommonUtil.getOrCreate(value.getAdId(), creativeUnitMap, ConcurrentSkipListSet::new)
                 .add(value.getUnitId());
 
-        Set<Long> creativeSet = unitCreativeMap.get(value.getUnitId());
-        if (CollectionUtils.isEmpty(creativeSet)) {
-            creativeSet = new ConcurrentSkipListSet<>();
-            unitCreativeMap.put(value.getUnitId(), creativeSet);
-        }
-        creativeSet.add(value.getAdId());
+        CommonUtil.getOrCreate(value.getUnitId(), unitCreativeMap, ConcurrentSkipListSet::new)
+                .add(value.getAdId());
+
+//        Set<Long> creativeSet = unitCreativeMap.get(value.getUnitId());
+//        if (CollectionUtils.isEmpty(creativeSet)) {
+//            creativeSet = new ConcurrentSkipListSet<>();
+//            unitCreativeMap.put(value.getUnitId(), creativeSet);
+//        }
+//        creativeSet.add(value.getAdId());
 
         log.info("after add: {}", objectMap);
     }
@@ -89,16 +92,17 @@ public class CreativeUnitIndex implements IndexAware<String, CreativeUnitObject>
         log.info("after delete: {}", objectMap);
     }
 
-    public List<Long> selectAds(List<AdUnitObject> unitObjects){
-        if(CollectionUtils.isEmpty(unitObjects)){
+    //unitObjects -> adIds
+    public List<Long> selectAds(List<AdUnitObject> unitObjects) {
+        if (CollectionUtils.isEmpty(unitObjects)) {
             return Collections.emptyList();
         }
 
-        List<Long> result=new ArrayList<>();
+        List<Long> result = new ArrayList<>();
 
         for (AdUnitObject unitObject : unitObjects) {
             Set<Long> adIds = unitCreativeMap.get(unitObject.getUnitId());
-            if(CollectionUtils.isNotEmpty(adIds)){
+            if (CollectionUtils.isNotEmpty(adIds)) {
                 result.addAll(adIds);
             }
         }

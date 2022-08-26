@@ -43,7 +43,7 @@ public class SearchTest {
         request.setRequestInfo(new SearchRequest.RequestInfo(
                 "aaa",
                 Collections.singletonList(new AdSlot(
-                        "ad-x", 1, 1080, 720, Arrays.asList(1, 2), 1000
+                        "ad-x", 1, 1080, 720, 1, 1000
                 )),
                 buildExampleApp(),
                 buildExampleGeo(),
@@ -62,7 +62,7 @@ public class SearchTest {
         request.setRequestInfo(new SearchRequest.RequestInfo(
                 "aaa",
                 Collections.singletonList(new AdSlot(
-                        "ad-y", 1, 1080, 720, Arrays.asList(1, 2), 1000
+                        "ad-y", 1, 1080, 720, 1, 1000
                 )),
                 buildExampleApp(),
                 buildExampleGeo(),
@@ -72,6 +72,26 @@ public class SearchTest {
                 Arrays.asList("宝马", "大众", "标志"),
                 Collections.singletonList(new DistrictFeature.ProvinceAndCity("安徽省", "合肥市")),
                 Arrays.asList("台球", "游泳"),
+                FeatureRelation.AND
+        ));
+        System.out.println(JSON.toJSONString(request));
+        System.out.println(JSON.toJSONString(search.fetchAds(request)));
+
+
+        // 第三个测试条件
+        request.setRequestInfo(new SearchRequest.RequestInfo(
+                "aaa",
+                Collections.singletonList(new AdSlot(
+                        "ad-z", 1, 720, 1080, 1, 1000
+                )),
+                buildExampleApp(),
+                buildExampleGeo(),
+                buildExampleDevice()
+        ));
+        request.setFeatureInfo(buildExampleFeatureInfo(
+                Collections.emptyList(),
+                Collections.singletonList(new DistrictFeature.ProvinceAndCity()),
+                Collections.emptyList(),
                 FeatureRelation.AND
         ));
         System.out.println(JSON.toJSONString(request));

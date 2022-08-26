@@ -2,7 +2,7 @@ package asia.daijizai.ad.index;
 
 import asia.daijizai.ad.dump.DConstant;
 import asia.daijizai.ad.dump.table.*;
-import asia.daijizai.ad.handler.AdLevelDataHandler;
+import asia.daijizai.ad.handler.AdDataHandler;
 import asia.daijizai.ad.mysql.constant.OpType;
 import com.alibaba.fastjson.JSON;
 import org.springframework.context.annotation.DependsOn;
@@ -37,41 +37,41 @@ public class IndexFileLoader {
                 String.format("%s%s", DConstant.DATA_ROOT_DIR, DConstant.AD_PLAN));//读取文件内容
         for (String adPlanString : adPlanStrings) {
             AdPlanTable planTable = JSON.parseObject(adPlanString, AdPlanTable.class);//反序列化
-            AdLevelDataHandler.handleLevel2(planTable, OpType.ADD);//添加索引
+            AdDataHandler.handle(planTable, OpType.ADD);//添加索引
         }
 
         List<String> adCreativeStrings = loadDumpData(
                 String.format("%s%s", DConstant.DATA_ROOT_DIR, DConstant.AD_CREATIVE));
-        adCreativeStrings.forEach(c -> AdLevelDataHandler.handleLevel2(
+        adCreativeStrings.forEach(c -> AdDataHandler.handle(
                 JSON.parseObject(c, AdCreativeTable.class), OpType.ADD));
 
         //第3层级全量索引的加载
 
         List<String> adUnitStrings = loadDumpData(
                 String.format("%s%s", DConstant.DATA_ROOT_DIR, DConstant.AD_UNIT));
-        adUnitStrings.forEach(u -> AdLevelDataHandler.handleLevel3(
+        adUnitStrings.forEach(u -> AdDataHandler.handle(
                 JSON.parseObject(u, AdUnitTable.class), OpType.ADD));
 
         List<String> adCreativeUnitStrings = loadDumpData(
                 String.format("%s%s", DConstant.DATA_ROOT_DIR, DConstant.AD_CREATIVE_UNIT));
-        adCreativeUnitStrings.forEach(cu -> AdLevelDataHandler.handleLevel3(
+        adCreativeUnitStrings.forEach(cu -> AdDataHandler.handle(
                 JSON.parseObject(cu, AdCreativeUnitTable.class), OpType.ADD));
 
         //第4层级全量索引的加载
 
         List<String> adUnitDistrictStrings = loadDumpData(
                 String.format("%s%s", DConstant.DATA_ROOT_DIR, DConstant.AD_UNIT_DISTRICT));
-        adUnitDistrictStrings.forEach(d -> AdLevelDataHandler.handleLevel4(
+        adUnitDistrictStrings.forEach(d -> AdDataHandler.handle(
                 JSON.parseObject(d, AdUnitDistrictTable.class), OpType.ADD));
 
         List<String> adUnitItStrings = loadDumpData(
                 String.format("%s%s", DConstant.DATA_ROOT_DIR, DConstant.AD_UNIT_IT));
-        adUnitItStrings.forEach(i -> AdLevelDataHandler.handleLevel4(
+        adUnitItStrings.forEach(i -> AdDataHandler.handle(
                 JSON.parseObject(i, AdUnitItTable.class), OpType.ADD));
 
         List<String> adUnitKeywordStrings = loadDumpData(
                 String.format("%s%s", DConstant.DATA_ROOT_DIR, DConstant.AD_UNIT_KEYWORD));
-        adUnitKeywordStrings.forEach(k -> AdLevelDataHandler.handleLevel4(
+        adUnitKeywordStrings.forEach(k -> AdDataHandler.handle(
                 JSON.parseObject(k, AdUnitKeywordTable.class), OpType.ADD));
     }
 

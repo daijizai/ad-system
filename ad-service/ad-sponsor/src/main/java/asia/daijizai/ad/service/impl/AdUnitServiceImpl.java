@@ -1,5 +1,6 @@
 package asia.daijizai.ad.service.impl;
 
+import asia.daijizai.ad.constant.CommonStatus;
 import asia.daijizai.ad.constant.Constants;
 import asia.daijizai.ad.dao.AdPlanRepository;
 import asia.daijizai.ad.dao.AdUnitRepository;
@@ -13,10 +14,11 @@ import asia.daijizai.ad.entity.AdUnit;
 import asia.daijizai.ad.entity.unit_condition.AdUnitDistrict;
 import asia.daijizai.ad.entity.unit_condition.AdUnitIt;
 import asia.daijizai.ad.entity.unit_condition.AdUnitKeyword;
-import asia.daijizai.ad.entity.unit_condition.CreativeUnit;
 import asia.daijizai.ad.exception.AdException;
 import asia.daijizai.ad.service.IAdUnitService;
 import asia.daijizai.ad.vo.*;
+import asia.daijizai.ad.vo.unit.AdUnitRequest;
+import asia.daijizai.ad.vo.unit.AdUnitResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -46,11 +48,10 @@ public class AdUnitServiceImpl implements IAdUnitService {
     private final CreativeUnitRepository creativeUnitRepository;
 
     @Autowired
-    public AdUnitServiceImpl(AdPlanRepository planRepository,
-                             AdUnitRepository unitRepository,
+    public AdUnitServiceImpl(AdPlanRepository planRepository, AdUnitRepository unitRepository,
                              AdUnitKeywordRepository unitKeywordRepository,
-                             AdUnitItRepository unitItRepository,
-                             AdUnitDistrictRepository unitDistrictRepository, CreativeRepository creativeRepository, CreativeUnitRepository creativeUnitRepository) {
+                             AdUnitItRepository unitItRepository, AdUnitDistrictRepository unitDistrictRepository,
+                             CreativeRepository creativeRepository, CreativeUnitRepository creativeUnitRepository) {
         this.planRepository = planRepository;
         this.unitRepository = unitRepository;
         this.unitKeywordRepository = unitKeywordRepository;
@@ -60,6 +61,15 @@ public class AdUnitServiceImpl implements IAdUnitService {
         this.creativeUnitRepository = creativeUnitRepository;
     }
 
+    @Override
+    public List<AdUnit> getAll()throws AdException{
+        return unitRepository.findAll();
+    }
+
+    @Override
+    public List<AdUnit> getByPlanId(Long planId) throws AdException {
+        return unitRepository.getAllByPlanIdAndUnitStatus(planId, CommonStatus.VALID.getStatus());
+    }
 
     @Override
     public AdUnitResponse createUnit(AdUnitRequest request) throws AdException {
@@ -148,24 +158,24 @@ public class AdUnitServiceImpl implements IAdUnitService {
 
     @Override
     public CreativeUnitResponse createCreativeUnit(CreativeUnitRequest request) throws AdException {
-        List<Long> unitIds = request.getUnitItems().stream()
-                .map(CreativeUnitRequest.CreativeUnitItem::getUnitId)
+        List<Long> unitIds = request.getCreativeUnits().stream()
+                .map(CreativeUnitRequest.CreativeUnit::getUnitId)
                 .collect(Collectors.toList());
-        List<Long> creativeIds = request.getUnitItems().stream()
-                .map(CreativeUnitRequest.CreativeUnitItem::getCreativeId)
+        List<Long> creativeIds = request.getCreativeUnits().stream()
+                .map(CreativeUnitRequest.CreativeUnit::getCreativeId)
                 .collect(Collectors.toList());
         if (!(isRelatedUnitExist(unitIds) && isRelatedCreativeExist(creativeIds))) {
             throw new AdException(Constants.ErrorMsg.REQUEST_PARAM_ERROR);
         }
 
-        List<CreativeUnit> creativeUnits = new ArrayList<>();
-        request.getUnitItems().forEach(i -> creativeUnits.add(
-                new CreativeUnit(i.getCreativeId(), i.getUnitId())
+        List<asia.daijizai.ad.entity.unit_condition.CreativeUnit> creativeUnits = new ArrayList<>();
+        request.getCreativeUnits().forEach(i -> creativeUnits.add(
+                new asia.daijizai.ad.entity.unit_condition.CreativeUnit(i.getCreativeId(), i.getUnitId())
         ));
 
         List<Long> ids = creativeUnitRepository.saveAll(creativeUnits)
                 .stream()
-                .map(CreativeUnit::getId)
+                .map(asia.daijizai.ad.entity.unit_condition.CreativeUnit::getId)
                 .collect(Collectors.toList());
 
         return new CreativeUnitResponse(ids);

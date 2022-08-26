@@ -28,6 +28,7 @@ public class Constant {
         public static final String TABLE_NAME = "ad_creative";
 
         public static final String COLUMN_ID = "id";
+        public static final String COLUMN_NAME = "name";
         public static final String COLUMN_TYPE = "type";
         public static final String COLUMN_MATERIAL_TYPE = "material_type";
         public static final String COLUMN_HEIGHT = "height";

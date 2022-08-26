@@ -1,5 +1,6 @@
 package asia.daijizai.ad.index.adunit;
 
+import asia.daijizai.ad.constant.AdUnitConstants;
 import asia.daijizai.ad.index.adplan.AdPlanObject;
 import lombok.AllArgsConstructor;
 import lombok.Data;

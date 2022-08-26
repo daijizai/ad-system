@@ -81,6 +81,7 @@ public class IncrementListener implements IListener{
             mySqlRowData.getFieldValueMaps().add(fieldValueMap);
         }
 
+        log.info(">>>>>{}",mySqlRowData);
         sender.sender(mySqlRowData);//实现增量数据的投递
     }
 }

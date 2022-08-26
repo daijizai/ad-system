@@ -25,7 +25,7 @@ public class AdSlot {
     private Integer height;
 
     // 广告物料类型: 图片, 视频
-    private List<Integer> type;
+    private Integer type;
 
     // 最低出价
     private Integer minCpm;

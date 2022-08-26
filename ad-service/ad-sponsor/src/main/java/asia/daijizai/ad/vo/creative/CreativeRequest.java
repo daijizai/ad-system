@@ -1,4 +1,4 @@
-package asia.daijizai.ad.vo;
+package asia.daijizai.ad.vo.creative;
 
 import asia.daijizai.ad.constant.CommonStatus;
 import asia.daijizai.ad.entity.Creative;

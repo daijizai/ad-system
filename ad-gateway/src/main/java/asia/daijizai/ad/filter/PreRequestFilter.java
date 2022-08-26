@@ -39,7 +39,6 @@ public class PreRequestFilter extends ZuulFilter {
 
         RequestContext ctx = RequestContext.getCurrentContext();
         ctx.set("startTime", System.currentTimeMillis());
-
         return null;
     }
 }

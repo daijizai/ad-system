@@ -18,7 +18,7 @@ import java.util.Optional;
  * @date 2022/8/13 10:38
  * @description
  */
-@Component("kafkaSender")
+//@Component("kafkaSender")
 public class KafkaSender implements ISender {
 
     @Value("${adconf.kafka.topic}")

@@ -1,7 +1,12 @@
 package asia.daijizai.ad.service;
 
+import asia.daijizai.ad.entity.AdUnit;
 import asia.daijizai.ad.exception.AdException;
 import asia.daijizai.ad.vo.*;
+import asia.daijizai.ad.vo.unit.AdUnitRequest;
+import asia.daijizai.ad.vo.unit.AdUnitResponse;
+
+import java.util.List;
 
 /**
  * @author daijizai
@@ -10,6 +15,10 @@ import asia.daijizai.ad.vo.*;
  * @description
  */
 public interface IAdUnitService {
+
+    List<AdUnit> getAll()throws AdException;
+
+    List<AdUnit> getByPlanId(Long planId)throws AdException;
 
     AdUnitResponse createUnit(AdUnitRequest request) throws AdException;
 

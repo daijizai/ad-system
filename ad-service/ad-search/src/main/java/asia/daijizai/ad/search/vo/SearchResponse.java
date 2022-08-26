@@ -22,7 +22,7 @@ import java.util.Map;
 @AllArgsConstructor
 public class SearchResponse {
 
-    //key -> adSlotCode
+    //key : adSlotCode
     public Map<String, List<Creative>> adSlot2Ads = new HashMap<>();
 
     //索引对象 -> 返回给媒体方的广告创意数据。
@@ -30,6 +30,7 @@ public class SearchResponse {
     public static Creative convert(CreativeObject object) {
         return new Creative()
                 .setAdId(object.getAdId())
+                .setName(object.getName())
                 .setAdUrl(object.getAdUrl())
                 .setWidth(object.getWidth())
                 .setHeight(object.getHeight())
@@ -43,6 +44,7 @@ public class SearchResponse {
     @Accessors(chain = true)
     public static class Creative {
         private Long adId;
+        private String name;
         private String adUrl;
         private Integer width;
         private Integer height;

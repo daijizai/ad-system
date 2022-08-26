@@ -27,10 +27,10 @@ public class AdUnitIndex implements IndexAware<Long, AdUnitObject> {
     }
 
     //positionType是广告位要求的类型，对所有的索引进行匹配
-    public Set<Long> match(Integer positionType){
-        Set<Long> adUnitIds =new HashSet<>();
-        objectMap.forEach((k,v)->{
-            if(AdUnitObject.isAdSlotTypeOK(positionType,v.getPositionType())){
+    public Set<Long> match(Integer positionType) {
+        Set<Long> adUnitIds = new HashSet<>();
+        objectMap.forEach((k, v) -> {
+            if (AdUnitObject.isAdSlotTypeOK(positionType, v.getPositionType())) {
                 adUnitIds.add(k);
             }
         });
@@ -39,7 +39,6 @@ public class AdUnitIndex implements IndexAware<Long, AdUnitObject> {
     }
 
     public List<AdUnitObject> fetch(Collection<Long> adUnitIds) {
-
         if (CollectionUtils.isEmpty(adUnitIds)) {
             return Collections.emptyList();
         }
@@ -47,7 +46,7 @@ public class AdUnitIndex implements IndexAware<Long, AdUnitObject> {
         List<AdUnitObject> result = new ArrayList<>();
 
         adUnitIds.forEach(u -> {
-            AdUnitObject object = get(u);
+            AdUnitObject object = this.get(u);
             if (object == null) {
                 log.error("AdUnitObject not found: {}", u);
                 return;

@@ -53,6 +53,10 @@ public class UnitKeywordIndex implements IndexAware<String, Set<Long>> {
         return result;
     }
 
+    /**
+     * @param key 关键词
+     * @param value 需要添加的关键词所属推广单元id的集合
+     */
     @Override
     public void add(String key, Set<Long> value) {
         log.info("UnitKeywordIndex, before add: {}", unitKeywordMap);
@@ -73,6 +77,10 @@ public class UnitKeywordIndex implements IndexAware<String, Set<Long>> {
         log.error("keyword index can not support update");
     }
 
+    /**
+     * @param key 关键词
+     * @param value 需要删除的关键词所属推广单元id的集合
+     */
     @Override
     public void delete(String key, Set<Long> value) {
         log.info("UnitKeywordIndex, before delete: {}", unitKeywordMap);
@@ -88,6 +96,7 @@ public class UnitKeywordIndex implements IndexAware<String, Set<Long>> {
         log.info("UnitKeywordIndex, after delete: {}", unitKeywordMap);
     }
 
+    //unit中包含keywords
     public boolean match(Long unitId, List<String> keywords) {
         if (unitKeywordMap.containsKey(unitId) && CollectionUtils.isNotEmpty(unitKeywordMap.get(unitId))) {
             Set<String> unitAllKeywords = unitKeywordMap.get(unitId);

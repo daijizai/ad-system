@@ -2,7 +2,7 @@ package asia.daijizai.ad.service;
 
 import asia.daijizai.ad.Application;
 import asia.daijizai.ad.exception.AdException;
-import asia.daijizai.ad.vo.AdPlanGetRequest;
+import asia.daijizai.ad.vo.plan.AdPlanGetRequest;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

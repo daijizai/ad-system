@@ -23,14 +23,13 @@ public class CommonResponseDataAdvice implements ResponseBodyAdvice<Object> {
 
     @Override
     @SuppressWarnings("all")//隐藏warnings
-    public boolean supports(MethodParameter methodParameter,
-                            Class<? extends HttpMessageConverter<?>> aClass) {
+    public boolean supports(MethodParameter methodParameter, Class<? extends HttpMessageConverter<?>> aClass) {
         if (methodParameter.getDeclaringClass().isAnnotationPresent(IgnoreResponseAdvice.class)) {
-            //拿到类的声明，如果类被IgnoreResponseAdvice注解修饰，代表该类不应该被CommonResponse影响
+            //拿到类的声明，如果类被IgnoreResponseAdvice注解修饰，代表该类不应该被CommonResponseDataAdvice影响
             return false;
         }
         if (methodParameter.getMethod().isAnnotationPresent(IgnoreResponseAdvice.class)) {
-            //拿到方法，如果方法被IgnoreResponseAdvice注解修饰，代表该方法不应该被CommonResponse影响
+            //拿到方法，如果方法被IgnoreResponseAdvice注解修饰，代表该方法不应该被CommonResponseDataAdvice影响
             return false;
         }
 
@@ -38,20 +37,18 @@ public class CommonResponseDataAdvice implements ResponseBodyAdvice<Object> {
     }
 
     @Override
-    public Object beforeBodyWrite(Object o,
-                                  MethodParameter methodParameter,
-                                  MediaType mediaType,
+    @SuppressWarnings("all")//隐藏warnings
+    public Object beforeBodyWrite(Object body, MethodParameter methodParameter, MediaType mediaType,
                                   Class<? extends HttpMessageConverter<?>> aClass,
-                                  ServerHttpRequest serverHttpRequest,
-                                  ServerHttpResponse serverHttpResponse) {
-        //o代表要返回的对象
+                                  ServerHttpRequest serverHttpRequest, ServerHttpResponse serverHttpResponse) {
+        //body：响应对象
         CommonResponse<Object> response = new CommonResponse<>(0, "");
-        if (null == o) {
+        if (null == body) {
             return response;
-        } else if (o instanceof CommonResponse) {
-            response = (CommonResponse<Object>) o;
+        } else if (body instanceof CommonResponse) {
+            response = (CommonResponse<Object>) body;
         } else {
-            response.setData(o);
+            response.setData(body);
         }
 
         return response;

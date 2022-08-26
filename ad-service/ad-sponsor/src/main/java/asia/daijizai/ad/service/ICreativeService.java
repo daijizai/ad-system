@@ -1,7 +1,10 @@
 package asia.daijizai.ad.service;
 
-import asia.daijizai.ad.vo.CreativeRequest;
-import asia.daijizai.ad.vo.CreativeResponse;
+import asia.daijizai.ad.entity.Creative;
+import asia.daijizai.ad.vo.creative.CreativeRequest;
+import asia.daijizai.ad.vo.creative.CreativeResponse;
+
+import java.util.List;
 
 /**
  * @author daijizai
@@ -12,4 +15,6 @@ import asia.daijizai.ad.vo.CreativeResponse;
 public interface ICreativeService {
 
     CreativeResponse createCreative(CreativeRequest request);
+
+    List<Creative> getByUnitId(Long unitId);
 }

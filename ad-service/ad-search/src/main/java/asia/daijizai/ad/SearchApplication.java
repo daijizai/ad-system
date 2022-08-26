@@ -19,12 +19,17 @@ import org.springframework.web.client.RestTemplate;
  * @description
  */
 
-@EnableFeignClients
+//@EnableFeignClients
+//@EnableEurekaClient
+//@EnableHystrix
+//@EnableCircuitBreaker
+//@EnableDiscoveryClient
+//@EnableHystrixDashboard
+//@SpringBootApplication
+
 @EnableEurekaClient
-@EnableHystrix
 @EnableCircuitBreaker
-@EnableDiscoveryClient
-@EnableHystrixDashboard
+@EnableFeignClients
 @SpringBootApplication
 public class SearchApplication {
 
